@@ -10,3 +10,5 @@ BuildingEscape/Content/StarterContent/HDRI
 *.xcuserstate
 
 BuildingEscape/.DS_Store
+
+*.xcbkptlist
