@@ -28,5 +28,20 @@ public:
 private:
     // How far ahead of the player can we reach in CMs
     float Reach = 100.f;
-	
+    
+    UPhysicsHandleComponent* PhysicsHandle = nullptr;
+    
+    UInputComponent* InputComponent = nullptr;
+    
+    // ray-cast and grab whats in reach
+    void Grab();
+    
+    void Release();
+    
+    // Find attached physics handle
+    void FindPyhsicsHandleComponent();
+    
+    // Setup (assumed) attached input component
+    void SetupInputComponent();
+    
 };
