@@ -45,7 +45,10 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	
+    if (!PressurePlate) {
+        UE_LOG(LogTemp, Error, TEXT("%s missing pressure plate component"), *(GetOwner()->GetName()))
+        return;
+    }
     // if the ActorThatOpens is in the Volume
 //    if (PressurePlate->IsOverlappingActor(ActorThatOpens))
     // Poll the Trigger Volume
@@ -72,7 +75,7 @@ float UOpenDoor::GetTotalMassOfActorsOnPlate()
     // Iterate through them adding their masses
     for (const auto* Actor: OverlappingActors) {
         TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
-        UE_LOG(LogTemp, Warning, TEXT("Overlapping actor name: %s"), *(Actor->GetName()))
+//        UE_LOG(LogTemp, Warning, TEXT("Overlapping actor name: %s"), *(Actor->GetName()))
     }
     
     return TotalMass;
