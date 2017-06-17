@@ -21,21 +21,25 @@ void UOpenDoor::BeginPlay()
     
 //    ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
     Owner = GetOwner();
+    
+    if (!PressurePlate) {
+        UE_LOG(LogTemp, Error, TEXT("%s missing pressure plate component"), *(GetOwner()->GetName()))
+        return;
+    }
 }
 
 void UOpenDoor::OpenDoor()
 {
-    // Create a rotator
-    FRotator NewRotation = FRotator(0.0f,OpenAngle,0.0f);
-    
-    Owner->SetActorRotation(NewRotation);
+//    FRotator NewRotation = FRotator(0.0f,OpenAngle,0.0f);
+//    Owner->SetActorRotation(NewRotation);
 
+    OnOpenRequest.Broadcast();
 }
 
 void UOpenDoor::CloseDoor()
 {
     // Create a rotator
-    FRotator NewRotation = FRotator(0.0f,0.0f,0.0f);
+    FRotator NewRotation = FRotator(0.0f,180.0f,0.0f);
     
     Owner->SetActorRotation(NewRotation);
 }
@@ -46,9 +50,9 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
     if (!PressurePlate) {
-        UE_LOG(LogTemp, Error, TEXT("%s missing pressure plate component"), *(GetOwner()->GetName()))
         return;
     }
+    
     // if the ActorThatOpens is in the Volume
 //    if (PressurePlate->IsOverlappingActor(ActorThatOpens))
     // Poll the Trigger Volume
@@ -65,8 +69,9 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 float UOpenDoor::GetTotalMassOfActorsOnPlate()
 {
-    
     float TotalMass = 0.f;
+    
+    if (!PressurePlate) {return TotalMass;}
     
     // Find all the overlapping actors
     TArray<AActor*> OverlappingActors;
