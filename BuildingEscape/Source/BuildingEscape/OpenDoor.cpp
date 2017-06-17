@@ -28,21 +28,6 @@ void UOpenDoor::BeginPlay()
     }
 }
 
-void UOpenDoor::OpenDoor()
-{
-//    FRotator NewRotation = FRotator(0.0f,OpenAngle,0.0f);
-//    Owner->SetActorRotation(NewRotation);
-
-    OnOpenRequest.Broadcast();
-}
-
-void UOpenDoor::CloseDoor()
-{
-    // Create a rotator
-    FRotator NewRotation = FRotator(0.0f,180.0f,0.0f);
-    
-    Owner->SetActorRotation(NewRotation);
-}
 
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -56,14 +41,11 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
     // if the ActorThatOpens is in the Volume
 //    if (PressurePlate->IsOverlappingActor(ActorThatOpens))
     // Poll the Trigger Volume
-    if (GetTotalMassOfActorsOnPlate() > 30.f) // TODO Make into a parameter
+    if (GetTotalMassOfActorsOnPlate() > TriggerMass)
     {
-        OpenDoor();
-        LastDoorOpenTime = GetWorld()->GetTimeSeconds();
-    }
-    
-    if (GetWorld()->GetTimeSeconds() - LastDoorOpenTime > DoorCloseDelay){
-        CloseDoor();
+        OnOpen.Broadcast();
+    } else {
+        OnClose.Broadcast();
     }
 }
 
